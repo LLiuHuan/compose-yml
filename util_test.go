@@ -4,7 +4,10 @@
 // @create: 2022-10-22 16:06
 package docker
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestUnmarshalYaml(t *testing.T) {
 	const yaml = `
@@ -66,6 +69,22 @@ services:
 	if err != nil {
 		t.Error(err)
 		return
+	}
+
+	for _, service := range dockerCompose.Services {
+		var aaa = "111111111"
+		service.HostName = aaa
+
+		service.Ports = append(service.Ports, Port{
+			Target:    1111,
+			Published: 1111,
+			Protocol:  "tcp",
+		})
+	}
+
+	fmt.Println(dockerCompose.Services["api"].HostName)
+	for _, port := range dockerCompose.Services["api"].Ports {
+		fmt.Println(port)
 	}
 
 	t.Log(dockerCompose)
