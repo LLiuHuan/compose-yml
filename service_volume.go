@@ -20,10 +20,11 @@ type VolumeMap struct {
 	Source   string `yaml:"source,omitempty"`    // 内部容器的路径
 	Target   string `yaml:"target,omitempty"`    // 权限
 	ReadOnly bool   `yaml:"read_only,omitempty"` // 是否只读
+	Desc     string `yaml:"desc,omitempty"`      // 描述
 }
 
 // NewVolumeMap 新建一个路径A到路径B的映射
-func NewVolumeMap(hostVolumeMap string, containerVolumeMap string) VolumeMap {
+func NewVolumeMap(hostVolumeMap string, containerVolumeMap string, desc string) VolumeMap {
 	return VolumeMap{
 		Source: hostVolumeMap,
 		Target: containerVolumeMap,
@@ -31,8 +32,8 @@ func NewVolumeMap(hostVolumeMap string, containerVolumeMap string) VolumeMap {
 }
 
 // NewVolumeMapSame 新建一个相同的路径映射
-func NewVolumeMapSame(volumeMap string) VolumeMap {
-	vm := NewVolumeMap(volumeMap, volumeMap)
+func NewVolumeMapSame(volumeMap string, desc string) VolumeMap {
+	vm := NewVolumeMap(volumeMap, volumeMap, desc)
 
 	//vm.Mode = VolumeReadOnly
 	return vm
@@ -57,11 +58,11 @@ func (m VolumeMap) MarshalYAML() (result interface{}, err error) {
 
 // UnmarshalYAML 反序列化
 func (m *VolumeMap) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
-	err = m.UnmarshalYAMLStr(unmarshal)
+	err = m.UnmarshalYAMLMap(unmarshal)
 	if err == nil {
 		return
 	}
-	err = m.UnmarshalYAMLMap(unmarshal)
+	err = m.UnmarshalYAMLStr(unmarshal)
 	if err != nil {
 		return
 	}

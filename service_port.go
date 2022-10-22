@@ -3,7 +3,6 @@ package docker
 import (
 	"errors"
 	"fmt"
-	"github.com/docker/cli/cli/compose/types"
 	"strconv"
 	"strings"
 )
@@ -14,19 +13,21 @@ type Port struct {
 	Target    uint32 `yaml:"target,omitempty" json:"target,omitempty"`
 	Published uint32 `yaml:"published,omitempty" json:"published,omitempty"`
 	Protocol  string `yaml:"protocol,omitempty" json:"protocol,omitempty"`
+	Desc      string `yaml:"desc,omitempty" json:"desc,omitempty"` // 描述
 }
 
 // NewPort 新建一个端口A到端口B的映射
-func NewPort(hostPort uint32, containerPort uint32) Port {
+func NewPort(hostPort uint32, containerPort uint32, desc string) Port {
 	return Port{
 		Published: hostPort,
 		Target:    containerPort,
+		Desc:      desc,
 	}
 }
 
 // NewPortSame 新建一个相同端口映射
-func NewPortSame(port uint32) Port {
-	return NewPort(port, port)
+func NewPortSame(port uint32, desc string) Port {
+	return NewPort(port, port, desc)
 }
 
 // MarshalYAML 序列化
@@ -48,11 +49,11 @@ func (m Port) MarshalYAML() (result interface{}, err error) {
 
 // UnmarshalYAML 反序列化
 func (m *Port) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
-	err = m.UnmarshalYAMLStr(unmarshal)
+	err = m.UnmarshalYAMLMap(unmarshal)
 	if err == nil {
 		return
 	}
-	err = m.UnmarshalYAMLMap(unmarshal)
+	err = m.UnmarshalYAMLStr(unmarshal)
 	if err != nil {
 		return
 	}
@@ -114,7 +115,14 @@ func (m *Port) UnmarshalYAMLStr(unmarshal func(interface{}) error) (err error) {
 }
 
 func (m *Port) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err error) {
-	var origin types.ServicePortConfig
+	type TemporaryPort struct {
+		Mode      string `yaml:"mode,omitempty" json:"mode,omitempty"`
+		Target    uint32 `yaml:"target,omitempty" json:"target,omitempty"`
+		Published uint32 `yaml:"published,omitempty" json:"published,omitempty"`
+		Protocol  string `yaml:"protocol,omitempty" json:"protocol,omitempty"`
+		Desc      string `yaml:"desc,omitempty" json:"desc,omitempty"` // 描述
+	}
+	var origin TemporaryPort
 	if err = unmarshal(&origin); err != nil {
 		return err
 	}
@@ -122,5 +130,6 @@ func (m *Port) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err error) {
 	m.Published = origin.Published
 	m.Protocol = origin.Protocol
 	m.Mode = origin.Mode
+	m.Desc = origin.Desc
 	return
 }

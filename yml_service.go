@@ -17,8 +17,8 @@ type Service struct {
 	// TODO dns
 	// TODO dns_search
 	// TODO entrypoint
-	EnvFile     []string               `yaml:"env_file,omitempty"`    // 环境变量文件
-	Environment map[string]interface{} `yaml:"environment,omitempty"` // 环境变量
+	EnvFile     []string      `yaml:"env_file,omitempty"`    // 环境变量文件
+	Environment []Environment `yaml:"environment,omitempty"` // 环境变量
 	// TODO expose
 	// TODO external_links
 	// TODO extra_hosts

@@ -27,7 +27,7 @@ func NewImageFromText(str string) (m Image) {
 	if len(parts) > 1 {
 		m.Tag = parts[1]
 	} else {
-		m.Tag = "latest"
+		m.Tag = TagDefault
 	}
 	return
 }
