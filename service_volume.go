@@ -15,11 +15,11 @@ import (
 
 // VolumeMap 路径(Short Syntax)
 type VolumeMap struct {
-	Type     string `yaml:"type,omitempty"`      // 外部主机的路径
-	Source   string `yaml:"source,omitempty"`    // 内部容器的路径
-	Target   string `yaml:"target,omitempty"`    // 权限
-	ReadOnly bool   `yaml:"read_only,omitempty"` // 是否只读
-	Desc     string `yaml:"desc,omitempty"`      // 描述
+	Type     string `yaml:"type,omitempty" json:"type,omitempty"`          // 外部主机的路径
+	Source   string `yaml:"source,omitempty" json:"source,omitempty"`      // 内部容器的路径
+	Target   string `yaml:"target,omitempty" json:"target,omitempty"`      // 权限
+	ReadOnly bool   `yaml:"read_only,omitempty" json:"readOnly,omitempty"` // 是否只读
+	Desc     string `yaml:"desc,omitempty" json:"desc,omitempty"`          // 描述
 }
 
 // NewVolumeMap 新建一个路径A到路径B的映射

@@ -11,9 +11,9 @@ import (
 )
 
 type Environment struct {
-	Key  string `yaml:"key,omitempty"`
-	Val  string `yaml:"val,omitempty"`
-	Desc string `yaml:"desc,omitempty"`
+	Key  string `yaml:"key,omitempty" json:"key,omitempty"`
+	Val  string `yaml:"val,omitempty" json:"val,omitempty"`
+	Desc string `yaml:"desc,omitempty" json:"desc,omitempty"`
 }
 
 // NewEnvironmentMap 新建一个环境变量映射
