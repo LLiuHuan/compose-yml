@@ -32,11 +32,10 @@ type Service struct {
 	NetworkMode string                `yaml:"network_mode,omitempty"` // 网络模式，可参见常量
 	Networks    map[string]NetworkMap `yaml:"networks,omitempty"`     // 加入的网络
 	// TODO pid
-	Ports      []Port   `yaml:"ports,omitempty"`      // 暴露的端口号
-	Privileged bool     `yaml:"privileged,omitempty"` // 特权信息
-	Proflies   []string `yaml:"profiles,omitempty"`   // 服务的配置文件
-	Restart    string   `yaml:"restart,omitempty"`    // 重启策略
-	Secrets    []Secret `yaml:"secrets,omitempty"`    // 密钥
+	Ports    []Port   `yaml:"ports,omitempty"`    // 暴露的端口号
+	Proflies []string `yaml:"profiles,omitempty"` // 服务的配置文件
+	Restart  string   `yaml:"restart,omitempty"`  // 重启策略
+	Secrets  []Secret `yaml:"secrets,omitempty"`  // 密钥
 	// TODO security_opt
 	// TODO stop_grace_period
 	// TODO stop_signal
@@ -45,4 +44,16 @@ type Service struct {
 	// TODO ulimits
 	// TODO userns_mode
 	Volumes []VolumeMap `yaml:"volumes,omitempty"` // 挂载卷
+	// Each of these is a single value, analogous to its docker run counterpart. Note that mac_address is a legacy option.
+	User       string `yaml:"user,omitempty"`        // 用户名
+	WorkingDir string `yaml:"working_dir,omitempty"` // 工作目录
+	DomainName string `yaml:"domainname,omitempty"`  // 域名
+	HostName   string `yaml:"hostname,omitempty"`    // 主机名
+	Ipc        string `yaml:"ipc,omitempty"`         // ipc
+	MacAddress string `yaml:"mac_address,omitempty"` // mac地址
+	Privileged bool   `yaml:"privileged,omitempty"`  // 特权
+	ReadOnly   bool   `yaml:"read_only,omitempty"`   // 只读
+	ShmSize    string `yaml:"shm_size,omitempty"`    // 共享内存大小
+	StdinOpen  bool   `yaml:"stdin_open,omitempty"`  // 标准输入
+	Tty        bool   `yaml:"tty,omitempty"`         // 是否开启tty
 }
