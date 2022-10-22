@@ -3,7 +3,6 @@ package docker
 import (
 	"errors"
 	"fmt"
-	"github.com/docker/cli/cli/compose/types"
 	"strings"
 )
 
@@ -104,7 +103,15 @@ func (m *VolumeMap) UnmarshalYAMLStr(unmarshal func(interface{}) error) (err err
 }
 
 func (m *VolumeMap) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err error) {
-	var origin types.ServiceVolumeConfig
+	type TemporaryVolumeMap struct {
+		Type     string `yaml:"type,omitempty"`      // 外部主机的路径
+		Source   string `yaml:"source,omitempty"`    // 内部容器的路径
+		Target   string `yaml:"target,omitempty"`    // 权限
+		ReadOnly bool   `yaml:"read_only,omitempty"` // 是否只读
+		Desc     string `yaml:"desc,omitempty"`      // 描述
+	}
+
+	var origin TemporaryVolumeMap
 	if err = unmarshal(&origin); err != nil {
 		return err
 	}
@@ -112,5 +119,6 @@ func (m *VolumeMap) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err err
 	m.Source = origin.Source
 	m.Target = origin.Target
 	m.ReadOnly = origin.ReadOnly
+	m.Desc = origin.Desc
 	return
 }
