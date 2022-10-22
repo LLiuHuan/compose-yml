@@ -15,9 +15,9 @@ import (
 
 // VolumeMap 路径(Short Syntax)
 type VolumeMap struct {
-	Type     string `yaml:"type,omitempty" json:"type,omitempty"`          // 外部主机的路径
-	Source   string `yaml:"source,omitempty" json:"source,omitempty"`      // 内部容器的路径
-	Target   string `yaml:"target,omitempty" json:"target,omitempty"`      // 权限
+	Type     string `yaml:"type,omitempty" json:"type,omitempty"`          // 类型 bind, volume, tmpfs
+	Source   string `yaml:"source,omitempty" json:"source,omitempty"`      // 外部主机的路径
+	Target   string `yaml:"target,omitempty" json:"target,omitempty"`      // 内部容器的路径
 	ReadOnly bool   `yaml:"read_only,omitempty" json:"readOnly,omitempty"` // 是否只读
 	Desc     string `yaml:"desc,omitempty" json:"desc,omitempty"`          // 描述
 }
@@ -44,9 +44,9 @@ func (m VolumeMap) MarshalYAML() (result interface{}, err error) {
 		err = errors.New("docker: simple-volume-map host can not be empty")
 		return
 	}
-	tmp := m.Target
-	if len(m.Source) > 0 {
-		tmp += fmt.Sprintf(":%s", m.Source)
+	tmp := m.Source
+	if len(m.Target) > 0 {
+		tmp += fmt.Sprintf(":%s", m.Target)
 		if m.ReadOnly {
 			tmp += fmt.Sprintf(":%s", VolumeReadOnly)
 		}

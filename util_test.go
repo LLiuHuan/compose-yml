@@ -6,6 +6,7 @@ package docker
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -70,6 +71,10 @@ services:
 		t.Error(err)
 		return
 	}
+
+	a := "123:345"
+	split := strings.Split(a, ":")
+	fmt.Println(split)
 
 	for _, service := range dockerCompose.Services {
 		var aaa = "111111111"
