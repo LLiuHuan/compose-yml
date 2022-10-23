@@ -3,21 +3,20 @@ package docker
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 )
 
 // Port 端口(Short Syntax)
 type Port struct {
 	Mode      string `yaml:"mode,omitempty" json:"mode,omitempty"`
-	Target    uint32 `yaml:"target,omitempty" json:"target,omitempty"`
-	Published uint32 `yaml:"published,omitempty" json:"published,omitempty"`
+	Target    string `yaml:"target,omitempty" json:"target,omitempty"`
+	Published string `yaml:"published,omitempty" json:"published,omitempty"`
 	Protocol  string `yaml:"protocol,omitempty" json:"protocol,omitempty"`
 	Desc      string `yaml:"desc,omitempty" json:"desc,omitempty"` // 描述
 }
 
 // NewPort 新建一个端口A到端口B的映射
-func NewPort(hostPort uint32, containerPort uint32, desc string) Port {
+func NewPort(hostPort string, containerPort string, desc string) Port {
 	return Port{
 		Published: hostPort,
 		Target:    containerPort,
@@ -26,19 +25,19 @@ func NewPort(hostPort uint32, containerPort uint32, desc string) Port {
 }
 
 // NewPortSame 新建一个相同端口映射
-func NewPortSame(port uint32, desc string) Port {
+func NewPortSame(port string, desc string) Port {
 	return NewPort(port, port, desc)
 }
 
 // MarshalYAML 序列化
 func (m Port) MarshalYAML() (result interface{}, err error) {
-	if m.Published == 0 {
+	if m.Published == "" {
 		err = errors.New("docker: simple-port host can not be empty")
 		return
 	}
-	tmp := strconv.FormatUint(uint64(m.Published), 10)
-	if m.Target != 0 {
-		tmp += fmt.Sprintf(":%d", m.Target)
+	tmp := m.Published
+	if m.Target != "" {
+		tmp += fmt.Sprintf(":%s", m.Target)
 		if len(m.Protocol) > 0 {
 			tmp += fmt.Sprintf("/%s", m.Protocol)
 		}
@@ -79,35 +78,19 @@ func (m *Port) UnmarshalYAMLStr(unmarshal func(interface{}) error) (err error) {
 	// 拆分主机和容器端口
 	loc := strings.LastIndex(remain, ":")
 	if loc < 0 {
-		parseUint, err := strconv.ParseUint(remain, 10, 32)
-		if err != nil {
-			return err
-		}
-		m.Published, m.Target = uint32(parseUint), 0
+		m.Published, m.Target = remain, ""
 	} else if loc != len(remain)-1 {
-		parseUint, err := strconv.ParseUint(remain[0:loc], 10, 32)
-		if err != nil {
-			return err
-		}
-		m.Published = uint32(parseUint)
-		parseUint, err = strconv.ParseUint(remain[loc+1:], 10, 32)
-		if err != nil {
-			return err
-		}
-		m.Target = uint32(parseUint)
+		m.Published = remain[0:loc]
+		m.Target = remain[loc+1:]
 	} else {
-		parseUint, err := strconv.ParseUint(remain[0:loc], 10, 32)
-		if err != nil {
-			return err
-		}
-		m.Published = uint32(parseUint)
+		m.Published = remain[0:loc]
 	}
 	// 校验
-	if m.Published == 0 {
+	if m.Published == "" {
 		err = errors.New("docker: simple-port format error")
 		return
 	}
-	if m.Target == 0 && len(m.Protocol) > 0 {
+	if m.Target == "" && len(m.Protocol) > 0 {
 		err = errors.New("docker: simple-port format error")
 		return
 	}
@@ -117,8 +100,8 @@ func (m *Port) UnmarshalYAMLStr(unmarshal func(interface{}) error) (err error) {
 func (m *Port) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err error) {
 	type TemporaryPort struct {
 		Mode      string `yaml:"mode,omitempty" json:"mode,omitempty"`
-		Target    uint32 `yaml:"target,omitempty" json:"target,omitempty"`
-		Published uint32 `yaml:"published,omitempty" json:"published,omitempty"`
+		Target    string `yaml:"target,omitempty" json:"target,omitempty"`
+		Published string `yaml:"published,omitempty" json:"published,omitempty"`
 		Protocol  string `yaml:"protocol,omitempty" json:"protocol,omitempty"`
 		Desc      string `yaml:"desc,omitempty" json:"desc,omitempty"` // 描述
 	}

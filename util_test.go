@@ -36,8 +36,8 @@ services:
   api:
     image: fairmarket.casdc.cn/dataspace/api:v1.0.0
     ports:
-      - target: 5193
-        published: 5193
+      - target: 5193-10000
+        published: 5193-10000
         protocol: tcp
         desc: "后台端口"
       - target: 8080
@@ -81,8 +81,8 @@ services:
 		service.HostName = aaa
 
 		service.Ports = append(service.Ports, Port{
-			Target:    1111,
-			Published: 1111,
+			Target:    "1111",
+			Published: "1111",
 			Protocol:  "tcp",
 		})
 	}
