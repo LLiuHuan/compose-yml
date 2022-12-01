@@ -53,13 +53,20 @@ func (m *Image) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
 		return
 	}
 	parts := strings.Split(origin, ":")
-	if len(parts) > 2 {
-		err = errors.New("docker: image format error")
-		return
+	for i, part := range parts {
+		if i == len(parts)-1 {
+			m.Tag = part
+		} else {
+			m.Name += part
+		}
 	}
-	m.Name = parts[0]
-	if len(parts) > 1 {
-		m.Tag = parts[1]
-	}
+	//if len(parts) > 2 {
+	//	err = errors.New("docker: image format error")
+	//	return
+	//}
+	//m.Name = parts[0]
+	//if len(parts) > 1 {
+	//	m.Tag = parts[1]
+	//}
 	return
 }
