@@ -53,21 +53,12 @@ func (m *Image) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
 		return
 	}
 	parts := strings.Split(origin, ":")
-	for i, part := range parts {
-		if i == len(parts)-1 {
-			m.Tag = part
-		} else {
-			m.Name += part
-		}
-	}
-	// 为了兼容IP:端口形式的，除此之外不能出现`:`
-	if len(parts) > 3 {
-		err = errors.New("docker: image format error")
-		return
-	}
-	m.Name = parts[0]
 	if len(parts) > 1 {
-		m.Tag = parts[1]
+		m.Tag = parts[len(parts)-1]
+		m.Name = strings.Join(parts[:len(parts)-1], ":")
+	} else {
+		m.Name = origin
+		m.Tag = TagDefault
 	}
 	return
 }

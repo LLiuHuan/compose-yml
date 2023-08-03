@@ -5,8 +5,6 @@
 package docker
 
 import (
-	"fmt"
-	"strings"
 	"testing"
 )
 
@@ -72,33 +70,7 @@ services:
 		return
 	}
 
-	a := "123:345"
-	split := strings.Split(a, ":")
-	fmt.Println(split)
-
 	for _, service := range dockerCompose.Services {
-		var aaa = "111111111"
-		service.HostName = aaa
-
-		service.Ports = append(service.Ports, Port{
-			Target:    "1111",
-			Published: "1111",
-			Protocol:  "tcp",
-		})
+		t.Log(service.Image)
 	}
-
-	fmt.Println(dockerCompose.Services["api"].HostName)
-	for _, port := range dockerCompose.Services["api"].Ports {
-		fmt.Println(port)
-	}
-
-	t.Log(dockerCompose)
-
-	marshalYaml, err := MarshalYaml(dockerCompose)
-	if err != nil {
-		t.Error(err)
-		return
-	}
-
-	t.Log(marshalYaml)
 }
