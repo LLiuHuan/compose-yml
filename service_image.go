@@ -61,7 +61,7 @@ func (m *Image) UnmarshalYAML(unmarshal func(interface{}) error) (err error) {
 		}
 	}
 	// 为了兼容IP:端口形式的，除此之外不能出现`:`
-	if len(parts) > 2 {
+	if len(parts) > 3 {
 		err = errors.New("docker: image format error")
 		return
 	}
