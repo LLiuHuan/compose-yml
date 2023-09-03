@@ -56,4 +56,8 @@ type Service struct {
 	ShmSize    string `yaml:"shm_size,omitempty"`    // 共享内存大小
 	StdinOpen  bool   `yaml:"stdin_open,omitempty"`  // 标准输入
 	Tty        bool   `yaml:"tty,omitempty"`         // 是否开启tty
+
+	// 下面是适配自定义的字段，正常使用本库时可以忽略
+	Host []string `yaml:"host,omitempty"` // 主机
+	Exec []string `yaml:"exec,omitempty"` // 执行命令
 }
