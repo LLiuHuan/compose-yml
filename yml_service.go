@@ -58,7 +58,8 @@ type Service struct {
 	Tty        bool   `yaml:"tty,omitempty"`         // 是否开启tty
 
 	// 下面是适配自定义的字段，正常使用本库时可以忽略
-	Host      []string `yaml:"host,omitempty"`      // 主机
-	Exec      []string `yaml:"exec,omitempty"`      // 执行命令
-	Expansion bool     `yaml:"expansion,omitempty"` // 是否可扩容
+	Host         []string `yaml:"host,omitempty"`      // 主机
+	Exec         []string `yaml:"exec,omitempty"`      // 执行命令
+	Expansion    bool     `yaml:"expansion,omitempty"` // 是否可扩容
+	Dependencies []string `yaml:"dependencies"`        // 依赖于哪些服务
 }
