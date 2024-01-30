@@ -18,8 +18,25 @@ type Deploy struct {
 }
 
 type Resources struct {
-	Cpus   string `yaml:"cpus,omitempty"`   // cpus 服务 CPU 配置 用于指定服务的 CPU 配置，可选值为 0.000 到 1 000.000
-	Memory string `yaml:"memory,omitempty"` // memory 服务内存配置 用于指定服务的内存配置，可选值为 4M 到 1 000G
+	//Cpus   string `yaml:"cpus,omitempty"`   // cpus 服务 CPU 配置 用于指定服务的 CPU 配置，可选值为 0.000 到 1 000.000
+	//Memory string `yaml:"memory,omitempty"` // memory 服务内存配置 用于指定服务的内存配置，可选值为 4M 到 1 000G
+	Limits       ResourcesItem `yaml:"limits"`       // limits 服务资源限制 用于指定服务的资源限制，可选值为 cpus、memory
+	Reservations ResourcesItem `yaml:"reservations"` // reservations 服务资源预留 用于指定服务的资源预留，可选值为 cpus、memory
+}
+
+type ResourcesItem struct {
+	Cpus    string           `yaml:"cpus"`
+	Memory  string           `yaml:"memory"`
+	Pids    int              `yaml:"pids"`
+	Devices ResourcesDevices `yaml:"devices"`
+}
+
+type ResourcesDevices struct {
+	Capabilities []string       `yaml:"capabilities"`
+	Driver       string         `yaml:"driver"`
+	Count        int            `yaml:"count"`
+	DeviceIds    []string       `yaml:"device_ids"`
+	Options      map[string]any `yaml:"options"`
 }
 
 type RestartPolicy struct {
