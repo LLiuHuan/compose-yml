@@ -25,10 +25,10 @@ type Resources struct {
 }
 
 type ResourcesItem struct {
-	Cpus    string           `yaml:"cpus"`
-	Memory  string           `yaml:"memory"`
-	Pids    int              `yaml:"pids"`
-	Devices ResourcesDevices `yaml:"devices"`
+	Cpus    string             `yaml:"cpus"`
+	Memory  string             `yaml:"memory"`
+	Pids    int                `yaml:"pids"`
+	Devices []ResourcesDevices `yaml:"devices"`
 }
 
 type ResourcesDevices struct {
