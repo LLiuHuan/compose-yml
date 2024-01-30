@@ -20,23 +20,25 @@ type Deploy struct {
 type Resources struct {
 	//Cpus   string `yaml:"cpus,omitempty"`   // cpus 服务 CPU 配置 用于指定服务的 CPU 配置，可选值为 0.000 到 1 000.000
 	//Memory string `yaml:"memory,omitempty"` // memory 服务内存配置 用于指定服务的内存配置，可选值为 4M 到 1 000G
-	Limits       ResourcesItem `yaml:"limits"`       // limits 服务资源限制 用于指定服务的资源限制，可选值为 cpus、memory
-	Reservations ResourcesItem `yaml:"reservations"` // reservations 服务资源预留 用于指定服务的资源预留，可选值为 cpus、memory
+	Limits       DeviceRequests `yaml:"limits"`       // limits 服务资源限制 用于指定服务的资源限制，可选值为 cpus、memory
+	Reservations DeviceRequests `yaml:"reservations"` // reservations 服务资源预留 用于指定服务的资源预留，可选值为 cpus、memory
 }
 
-type ResourcesItem struct {
-	Cpus    string             `yaml:"cpus"`
-	Memory  string             `yaml:"memory"`
-	Pids    int                `yaml:"pids"`
-	Devices []ResourcesDevices `yaml:"devices"`
+type DeviceRequests struct {
+	//Cpus    string          `yaml:"cpus"`
+	//Memory  string          `yaml:"memory"`
+	//Pids    int             `yaml:"pids"`
+	Devices []DeviceRequest `yaml:"devices"`
 }
 
-type ResourcesDevices struct {
-	Capabilities []string       `yaml:"capabilities"`
-	Driver       string         `yaml:"driver"`
-	Count        int            `yaml:"count"`
-	DeviceIds    []string       `yaml:"device_ids"`
-	Options      map[string]any `yaml:"options"`
+// DeviceRequest represents a request for devices from a device driver.
+// Used by GPU device drivers.
+type DeviceRequest struct {
+	Driver       string            // Name of device driver
+	Count        int               // Number of devices to request (-1 = All)
+	DeviceIDs    []string          // List of device IDs as recognizable by the device driver
+	Capabilities [][]string        // An OR list of AND lists of device capabilities (e.g. "gpu")
+	Options      map[string]string // Options to pass onto the device driver
 }
 
 type RestartPolicy struct {
