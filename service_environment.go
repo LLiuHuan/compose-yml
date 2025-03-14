@@ -11,13 +11,13 @@ import (
 )
 
 type Environment struct {
-	Key  string      `yaml:"key,omitempty" json:"key,omitempty"`
-	Val  interface{} `yaml:"val,omitempty" json:"val,omitempty"`
-	Desc string      `yaml:"desc,omitempty" json:"desc,omitempty"`
+	Key  string `yaml:"key,omitempty" json:"key,omitempty"`
+	Val  string `yaml:"val,omitempty" json:"val,omitempty"`
+	Desc string `yaml:"desc,omitempty" json:"desc,omitempty"`
 }
 
 // NewEnvironmentMap 新建一个环境变量映射
-func NewEnvironmentMap(key string, val interface{}, desc string) Environment {
+func NewEnvironmentMap(key string, val string, desc string) Environment {
 	return Environment{
 		Key:  key,
 		Val:  val,
@@ -100,7 +100,7 @@ func (m *Environment) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err e
 		case "key":
 			m.Key = i.(string)
 		case "val":
-			m.Val = i
+			m.Val = i.(string)
 		case "desc":
 			m.Desc = i.(string)
 		}
@@ -111,9 +111,9 @@ func (m *Environment) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err e
 
 func (m *Environment) UnmarshalYAMLStruct(unmarshal func(interface{}) error) (err error) {
 	type TemporaryEnvironment struct {
-		Key  string      `yaml:"key,omitempty"`
-		Val  interface{} `yaml:"val,omitempty"`
-		Desc string      `yaml:"desc,omitempty"`
+		Key  string `yaml:"key,omitempty"`
+		Val  string `yaml:"val,omitempty"`
+		Desc string `yaml:"desc,omitempty"`
 	}
 	var origin TemporaryEnvironment
 	if err = unmarshal(&origin); err != nil {
