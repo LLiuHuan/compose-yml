@@ -11,13 +11,13 @@ import (
 )
 
 type Environment struct {
-	Key  string `yaml:"key,omitempty" json:"key,omitempty"`
-	Val  string `yaml:"val,omitempty" json:"val,omitempty"`
-	Desc string `yaml:"desc,omitempty" json:"desc,omitempty"`
+	Key  string      `yaml:"key,omitempty" json:"key,omitempty"`
+	Val  interface{} `yaml:"val,omitempty" json:"val,omitempty"`
+	Desc string      `yaml:"desc,omitempty" json:"desc,omitempty"`
 }
 
 // NewEnvironmentMap 新建一个环境变量映射
-func NewEnvironmentMap(key string, val string, desc string) Environment {
+func NewEnvironmentMap(key string, val interface{}, desc string) Environment {
 	return Environment{
 		Key:  key,
 		Val:  val,
@@ -70,16 +70,13 @@ func (m *Environment) UnmarshalYAMLStr(unmarshal func(interface{}) error) (err e
 		return
 	}
 	// 拆分协议部分
-	parts := strings.Split(origin, "=")
-	fmt.Println(parts)
-	if len(parts) > 2 {
-		err = errors.New("docker: simple-environment format error")
-		return
+	index := strings.Index(origin, "=")
+
+	if index != -1 { // 如果找到了子串
+		m.Key = origin[:index]
+		m.Val = origin[index+len("="):]
 	}
-	if len(parts) > 1 {
-		m.Key = parts[0]
-		m.Val = parts[1]
-	}
+
 	// 校验
 	if m.Key == "" {
 		err = errors.New("docker: simple-environment format error")
@@ -103,7 +100,7 @@ func (m *Environment) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err e
 		case "key":
 			m.Key = i.(string)
 		case "val":
-			m.Val = i.(string)
+			m.Val = i
 		case "desc":
 			m.Desc = i.(string)
 		}
@@ -114,9 +111,9 @@ func (m *Environment) UnmarshalYAMLMap(unmarshal func(interface{}) error) (err e
 
 func (m *Environment) UnmarshalYAMLStruct(unmarshal func(interface{}) error) (err error) {
 	type TemporaryEnvironment struct {
-		Key  string `yaml:"key,omitempty"`
-		Val  string `yaml:"val,omitempty"`
-		Desc string `yaml:"desc,omitempty"`
+		Key  string      `yaml:"key,omitempty"`
+		Val  interface{} `yaml:"val,omitempty"`
+		Desc string      `yaml:"desc,omitempty"`
 	}
 	var origin TemporaryEnvironment
 	if err = unmarshal(&origin); err != nil {
