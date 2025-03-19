@@ -22,6 +22,7 @@ type Service struct {
 	// TODO expose
 	// TODO external_links
 	// TODO extra_hosts
+	ExtraHosts []string `yaml:"extra_hosts,omitempty"`
 	// TODO healthcheck
 	Image Image `yaml:"image"` // 容器启动的镜像
 	// TODO init
